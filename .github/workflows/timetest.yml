@@ -1,0 +1,29 @@
+name: Save Hour Of Day
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 * * * *" # Runs every hour, on the hour (UTC)
+
+jobs:
+  write-hour-to-file:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Get Current Hour
+        run: echo "HOUR=$(date +'%H')" >> $GITHUB_ENV
+
+      - name: Write Hour to File
+        run: echo "$HOUR" > hour.txt
+
+      - name: Commit Changes
+        run: |
+          git config --global user.name "${{ github.actor }}"
+          git config --global user.email "${{ github.actor }}@users.noreply.github.com"
+          git add hour.txt
+          git commit -m "Update hour.txt with current hour"
+          git push
