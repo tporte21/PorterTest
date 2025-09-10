@@ -1,0 +1,43 @@
+name: Save Hour Of Day with PR
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 * * * *" # Runs every hour, on the hour (UTC)
+
+jobs:
+  create-pr:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Get Current Hour
+        run: echo "HOUR=$(date +'%H')" >> $GITHUB_ENV
+
+      - name: Write Hour to File
+        run: echo "$HOUR" > hour.txt
+
+      - name: Configure Git
+        run: |
+          git config --global user.name "${{ github.actor }}"
+          git config --global user.email "${{ github.actor }}@users.noreply.github.com"
+
+      - name: Create New Branch
+        run: |
+          git checkout -b update-hour-branch-$(date +'%Y%m%d%H%M%S')
+          git add hour.txt
+          git commit -m "Update hour.txt with current hour"
+          git push origin HEAD
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "Update hour.txt with current hour"
+          branch: "update-hour-branch-$(date +'%Y%m%d%H%M%S')"
+          title: "Update hour.txt with current hour"
+          body: "Automated pull request to update hour.txt file with current hour."
+          base: main
