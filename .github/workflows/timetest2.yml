@@ -1,9 +1,9 @@
-name: Save Hour Of Day with PR
+name: Save Hour Of Day Real
 
 on:
   workflow_dispatch:
   schedule:
-    - cron: "0 * * * *" # Runs every hour, on the hour (UTC)
+    - cron: "* * * * *" # Runs as much as possible
 
 jobs:
   create-pr:
@@ -18,7 +18,7 @@ jobs:
         run: echo "HOUR=$(date +'%H')" >> $GITHUB_ENV
 
       - name: Write Hour to File
-        run: echo "$HOUR" > hour.txt
+        run: echo "$HOUR - $RANDOM" > hour.txt
 
       - name: Configure Git
         run: |
