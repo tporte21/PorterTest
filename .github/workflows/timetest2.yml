@@ -3,7 +3,7 @@ name: Save Hour Of Day Real
 on:
   workflow_dispatch:
   schedule:
-    - cron: "* * * * *" # Runs as much as possible
+    - cron: "0 1 * * *" # Runs as much as possible
 
 jobs:
   create-pr:
