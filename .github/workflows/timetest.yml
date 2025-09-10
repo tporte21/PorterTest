@@ -3,7 +3,7 @@ name: Save Hour Of Day
 on:
   workflow_dispatch:
   schedule:
-    - cron: "0 * * * *" # Runs every hour, on the hour (UTC)
+    - cron: "* * * * *" # Runs every hour, on the hour (UTC)
 
 jobs:
   write-hour-to-file:
@@ -18,7 +18,7 @@ jobs:
         run: echo "HOUR=$(date +'%H')" >> $GITHUB_ENV
 
       - name: Write Hour to File
-        run: echo "$HOUR" > hour.txt
+        run: echo "$HOUR - $RANDOM"  > hour.txt
 
       - name: Commit Changes
         run: |
