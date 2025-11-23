@@ -2,8 +2,8 @@ name: Save Hour Of Day
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron: "0 * * * *" # Runs every hour, on the hour (UTC)
+  # schedule:
+    # - cron: "0 * * * *" # Runs every hour, on the hour (UTC)
 
 jobs:
   write-hour-to-file:
